@@ -3,34 +3,49 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#073f5d">
-  <title>ICT Kalika ID Card Generator</title>
+  <meta name="theme-color" content="#0b2230">
+  <title>ICT Kalika · Identity Card Generator</title>
+  <script>try{const saved=localStorage.getItem('ict-kalika-theme');document.documentElement.dataset.theme=saved==='dark'||saved==='light'?saved:(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch{document.documentElement.dataset.theme=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'}</script>
   <link rel="stylesheet" href="style.css">
   <script type="module" src="js/app.js"></script>
 </head>
 <body>
-  <header class="site-header">
-    <div class="shell"><p class="eyebrow">ICT Kalika</p><h1>ID card generator</h1><p>Enter the member details, adjust the photo, and download a print-ready card.</p></div>
+  <header class="topbar">
+    <div class="shell topbar-inner">
+      <div class="brand"><span class="brand-icon" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none"><rect x="4" y="7" width="24" height="18" rx="4" stroke="currentColor" stroke-width="2.4"/><circle cx="12" cy="14" r="2.5" fill="currentColor"/><path d="M8.5 21c.5-2.4 2-3.6 3.5-3.6s3 1.2 3.5 3.6M19 13h5M19 18h5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span><span class="brand-name">ICT KALIKA</span></div>
+      <button type="button" class="theme-toggle" id="theme-toggle" aria-pressed="false" aria-label="Switch to dark mode"><span class="theme-toggle-label">Dark mode</span><span class="theme-toggle-track" aria-hidden="true"><span class="theme-toggle-thumb"></span></span></button>
+    </div>
   </header>
-  <main class="shell layout">
-    <section class="panel form-panel" aria-labelledby="details-title">
-      <div class="panel-heading"><span class="step">01</span><div><h2 id="details-title">Member details</h2><p>All fields are required.</p></div></div>
-      <form id="card-form" novalidate>
-        <div class="field-row">
-          <div class="field"><label for="class">Class</label><select id="class" name="class" required aria-describedby="class-error"><option value="">Select class</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option></select><p class="error" id="class-error" aria-live="polite"></p></div>
-        </div>
-        <fieldset class="field section-field" aria-describedby="section-hint section-error"><legend>Division / Section</legend><p class="hint" id="section-hint">Choose one letter.</p><div class="section-grid" id="section-grid"></div><p class="error" id="section-error" aria-live="polite"></p></fieldset>
-        <div class="field"><label for="full-name">Full name</label><input id="full-name" name="full-name" type="text" autocomplete="name" required placeholder="Enter full name" aria-describedby="name-error"><p class="error" id="name-error" aria-live="polite"></p></div>
-        <div class="field"><label for="phone">Phone number</label><input id="phone" name="phone" type="text" inputmode="numeric" autocomplete="tel-national" required placeholder="10 digits" aria-describedby="phone-error"><p class="error" id="phone-error" aria-live="polite"></p></div>
-        <div class="field"><label for="photo">Photograph</label><input id="photo" name="photo" type="file" accept="image/jpeg,image/png,image/webp" required aria-describedby="photo-hint photo-error"><p class="hint" id="photo-hint">JPG, PNG, or WebP. Your photo stays on this device.</p><p class="error" id="photo-error" aria-live="polite"></p></div>
-        <div class="photo-controls" id="photo-controls" hidden><div class="photo-control-heading"><strong>Position photo</strong><span>Drag in preview or use controls</span></div><label for="zoom">Zoom <output id="zoom-value">100%</output></label><input id="zoom" type="range" min="100" max="300" value="100" step="1"><label for="photo-x">Move horizontally</label><input id="photo-x" type="range" min="-100" max="100" value="0" step="1"><label for="photo-y">Move vertically</label><input id="photo-y" type="range" min="-100" max="100" value="0" step="1"></div>
-      </form>
-    </section>
-    <aside class="side-column">
-      <section class="panel preview-panel" aria-labelledby="preview-title"><div class="panel-heading"><span class="step">02</span><div><h2 id="preview-title">Live preview</h2><p>The card updates as you enter details.</p></div></div><div class="preview-stage"><canvas id="card-canvas" width="1033" height="1757" aria-label="Live preview of ID card"></canvas></div><p class="preview-note">The preview is scaled to fit your screen. Downloads use the full template resolution.</p></section>
-      <section class="panel export-panel" aria-labelledby="export-title"><div class="panel-heading"><span class="step">03</span><div><h2 id="export-title">Download</h2><p>Complete the fields before exporting.</p></div></div><p class="export-error" id="export-error" role="alert" hidden></p><div class="download-grid"><button type="button" class="download primary" data-format="pdf">Download PDF</button><button type="button" class="download" data-format="jpg">Download JPG</button><button type="button" class="download" data-format="png">Download PNG</button></div><button type="button" class="reset" id="reset-button">Reset form</button></section>
-    </aside>
+
+  <main class="shell">
+    <section class="intro"><div class="intro-copy"><h1>Identity card <em>generator</em></h1><p>Enter your details, add a photo, and download your card.</p></div></section>
+
+    <div class="workspace">
+      <section class="panel form-panel" aria-labelledby="details-title">
+        <div class="panel-heading"><div class="panel-title"><span class="step">01</span><div><h2 id="details-title">Card details</h2></div></div></div>
+        <div class="completion"><div class="completion-label"><span>Card completion</span><strong id="completion-count" aria-live="polite">0 of 5 ready</strong></div><div class="progress-track" role="presentation"><span id="progress-fill"></span></div></div>
+        <form id="card-form" novalidate>
+          <div class="field"><label id="class-label" for="class-trigger">Class <span class="required-star">*</span></label><div class="class-select" id="class-select"><button type="button" class="class-trigger" id="class-trigger" aria-haspopup="listbox" aria-expanded="false" aria-controls="class-options" aria-labelledby="class-label class-value" aria-describedby="class-error"><span class="class-trigger-copy"><small>SELECT CLASS</small><strong id="class-value">Choose a class</strong></span><span class="class-chevron" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button><div class="class-menu" id="class-options" role="listbox" aria-labelledby="class-label" hidden><button type="button" role="option" data-class="9" aria-selected="false" tabindex="-1"><span class="class-option-number">09</span><span>Class 9</span><span class="class-option-check" aria-hidden="true">✓</span></button><button type="button" role="option" data-class="10" aria-selected="false" tabindex="-1"><span class="class-option-number">10</span><span>Class 10</span><span class="class-option-check" aria-hidden="true">✓</span></button><button type="button" role="option" data-class="11" aria-selected="false" tabindex="-1"><span class="class-option-number">11</span><span>Class 11</span><span class="class-option-check" aria-hidden="true">✓</span></button><button type="button" role="option" data-class="12" aria-selected="false" tabindex="-1"><span class="class-option-number">12</span><span>Class 12</span><span class="class-option-check" aria-hidden="true">✓</span></button></div><input id="class" name="class" type="hidden" value=""></div><p class="error" id="class-error" aria-live="polite"></p></div>
+          <fieldset class="field section-field" aria-describedby="section-hint section-error"><legend>Division / Section <span class="required-star">*</span></legend><p class="hint" id="section-hint">Tap one letter. All sections are shown below.</p><div class="section-grid" id="section-grid"></div><p class="error" id="section-error" aria-live="polite"></p></fieldset>
+          <div class="field"><label for="full-name">Full name <span class="required-star">*</span></label><input id="full-name" name="full-name" type="text" autocomplete="name" required placeholder="As it should appear on the card" aria-describedby="name-error"><p class="error" id="name-error" aria-live="polite"></p></div>
+          <div class="field"><label for="phone">Phone number <span class="required-star">*</span></label><input id="phone" name="phone" type="text" inputmode="numeric" autocomplete="tel-national" required placeholder="Exactly 10 digits" aria-describedby="phone-hint phone-error"><p class="hint" id="phone-hint">Leading zeros are kept.</p><p class="error" id="phone-error" aria-live="polite"></p></div>
+          <div class="field photo-field"><div class="field-topline"><label for="photo">Photograph <span class="required-star">*</span></label></div>
+            <div class="upload-shell" id="upload-shell">
+              <button type="button" class="upload-zone" id="upload-zone" aria-describedby="photo-hint photo-error"><span class="upload-icon" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none"><path d="M24 30V11m0 0-7 7m7-7 7 7M10 29v8a3 3 0 0 0 3 3h22a3 3 0 0 0 3-3v-8" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="upload-main"><strong>Drop your photo here</strong><span>or <b>browse files</b> to choose one</span></span><span class="upload-meta">JPG · PNG · WebP</span></button>
+              <div class="upload-preview" id="upload-preview" hidden><img id="uploaded-image" alt="Selected photograph preview"><div class="upload-preview-details"><span class="success-mark">✓ Photo ready</span><strong id="photo-filename"></strong><span>Drag a new photo here or paste to replace it.</span><div class="upload-actions"><button type="button" id="replace-photo">Replace photo</button><button type="button" id="remove-photo">Remove</button></div></div></div>
+              <input id="photo" name="photo" type="file" class="visually-hidden" accept="image/jpeg,image/png,image/webp" required aria-describedby="photo-hint photo-error">
+            </div>
+            <p class="upload-hint" id="photo-hint">Tip: paste an image anywhere with <kbd>Ctrl</kbd> + <kbd>V</kbd> (or <kbd>⌘</kbd> + <kbd>V</kbd> on Mac).</p><p class="error" id="photo-error" aria-live="polite"></p>
+          </div>
+          <div class="photo-controls" id="photo-controls" hidden><div class="photo-control-heading"><strong>Fine-tune your crop</strong><span>Drag the photo in the card preview, or use the sliders.</span></div><div class="control-grid"><div><label for="zoom">Zoom <output id="zoom-value">100%</output></label><input id="zoom" type="range" min="100" max="300" value="100" step="1"></div><div><label for="photo-x">Move horizontally</label><input id="photo-x" type="range" min="-100" max="100" value="0" step="1"></div><div><label for="photo-y">Move vertically</label><input id="photo-y" type="range" min="-100" max="100" value="0" step="1"></div></div></div>
+        </form>
+      </section>
+
+      <aside class="side-column">
+        <section class="panel preview-panel" aria-labelledby="preview-title"><div class="panel-heading"><div class="panel-title"><span class="step">02</span><div><h2 id="preview-title">Live preview</h2></div></div></div><div class="preview-stage"><div class="stage-top"><span class="stage-screw" aria-hidden="true"></span><span class="stage-screw" aria-hidden="true"></span></div><div class="card-frame"><canvas id="card-canvas" width="1033" height="1757" aria-label="Live preview of ID card"></canvas></div></div><div class="preview-bottom"><span id="preview-status" aria-live="polite">Add your details to complete the card</span><span>1033 × 1757 px</span></div></section>
+        <section class="panel export-panel" aria-labelledby="export-title"><div class="panel-heading"><div class="panel-title"><span class="step">03</span><div><h2 id="export-title">Download</h2></div></div></div><p class="export-error" id="export-error" role="alert" hidden></p><div class="download-grid"><button type="button" class="download primary" data-format="pdf"><span>↓</span> Download PDF <small>Print ready</small></button><button type="button" class="download" data-format="jpg"><span>↓</span> JPG</button><button type="button" class="download" data-format="png"><span>↓</span> PNG</button></div><button type="button" class="reset" id="reset-button">↺ Reset everything</button></section>
+      </aside>
+    </div>
   </main>
-  <footer class="shell footer">Generated locally in your browser. No details or photographs are uploaded.</footer>
 </body>
 </html>

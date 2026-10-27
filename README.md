@@ -12,7 +12,9 @@ The folder containing this README and `index.html` is the complete deployable si
 
 ## Use
 
-Select class 9–12 and one division A–T. Enter a name and a phone number of exactly 10 digits. Upload a JPG, PNG, or WebP photograph. The image is cropped to the hexagonal opening; use the sliders or drag in the preview to position it. Download PDF, JPG, or PNG. Reset clears the form and loaded image.
+Select class 9–12 and one division A–T. Enter a name and a phone number of exactly 10 digits. Add a JPG, PNG, or WebP photograph by clicking the upload area, dropping a file on it, or pasting an image with Ctrl+V (⌘+V on Mac). A selected photo has its own preview and replace/remove controls. The image is cropped to the hexagonal opening; use the sliders or drag in the card preview to position it. Download PDF, JPG, or PNG. Reset clears the form and loaded image.
+
+The interface starts in the device's preferred light or dark theme. The navbar switch saves a manual choice in browser `localStorage` for this site, so it remains selected after reload. Card downloads always retain the original Canva design colors.
 
 The PDF is one card-sized page, approximately 50.57 × 86 mm, preserving the supplied design proportions. JPG and PNG use the template's native 1033 × 1757 pixels (about 519 DPI at that print size). The PDF embeds a high-quality JPEG of that same rendering. PDF output is deliberately raster-based because the original Canva background is a PNG.
 
